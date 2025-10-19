@@ -1,0 +1,35 @@
+{% extends 'layout.html' %}
+{% block title %}{{ get_text('admin_logs') }} - DI NIRO{% endblock %}
+
+{% block content %}
+<div class="container dashboard">
+    <div class="dashboard-header" style="margin-bottom: 2rem;">
+        <h1>{{ get_text('admin_logs') }}</h1>
+    </div>
+
+    <div class="content-section">
+        <table style="width:100%">
+            <thead>
+                <tr>
+                    <th>Timestamp</th>
+                    <th>Admin</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for log in logs %}
+                <tr>
+                    <td>{{ log.timestamp }}</td>
+                    <td>{{ log.admin_username }}</td>
+                    <td>{{ log.action }}</td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="3" style="text-align: center;">No activity logs found.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

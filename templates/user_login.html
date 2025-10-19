@@ -1,0 +1,36 @@
+{% extends 'layout.html' %}
+{% block title %}تسجيل دخول المستخدم - DI NIRO{% endblock %}
+
+{% block content %}
+<div class="main-content">
+    <div class="form-container">
+        <h1 style="text-align: center;">دخول المستخدم</h1>
+        
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    {% if category == 'error' %}
+                        <div class="flash {{ category }}" style="margin-bottom: 1rem;">{{ message }}</div>
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <form action="{{ url_for('user_login_route') }}" method="POST"> {# سننشئ مسار user_login_route لاحقاً #}
+            <div class="form-group">
+                <label>اسم المستخدم أو البريد الإلكتروني</label>
+                <input type="text" name="username_or_email" required>
+            </div>
+            <div class="form-group">
+                <label>كلمة المرور</label>
+                <input type="password" name="password" required>
+            </div>
+            <button type="submit" class="submit-btn" style="background-image: linear-gradient(to right, #10b981, #047857);">دخول</button>
+        </form>
+
+        <p style="text-align: center; margin-top: 1.5rem; color: var(--text-secondary);">
+            ليس لديك حساب؟ <a href="{{ url_for('user_register_route') }}" style="color: var(--accent-primary);">إنشاء حساب جديد</a> {# سننشئ مسار user_register_route لاحقاً #}
+        </p>
+    </div>
+</div>
+{% endblock %}

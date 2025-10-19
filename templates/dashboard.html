@@ -1,0 +1,185 @@
+{% extends 'layout.html' %}
+{% block title %}{{ get_text('dashboard') }} - DI NIRO{% endblock %}
+
+{% block content %}
+<div class="container dashboard">
+    <div class="dashboard-header" style="margin-bottom: 2rem;">
+        <h1>{{ get_text('welcome') }}, <span>{{ session.username }}</span></h1>
+    </div>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="flash {{ category }}">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    <div class="content-section">
+        <h2>Admin Controls</h2>
+        <div style="display: flex; flex-wrap: wrap; gap: 1rem;">
+            {% if is_super_admin %}
+                <a href="{{ url_for('manage_admins') }}" class="submit-btn" style="text-decoration: none; text-align: center; flex-grow: 1; background-image: linear-gradient(to right, #6366f1, #4f46e5);">{{ get_text('manage_admins') }}</a>
+                <a href="{{ url_for('admin_logs') }}" class="submit-btn" style="text-decoration: none; text-align: center; background-image: linear-gradient(to right, #3b82f6, #1d4ed8); flex-grow: 1;">{{ get_text('admin_logs') }}</a>
+            {% endif %}
+            <a href="{{ url_for('edit_index') }}" class="submit-btn" style="text-decoration: none; text-align: center; background-image: linear-gradient(to right, #F59E0B, #D97706); flex-grow: 1;">{{ get_text('edit_index') }}</a>
+             <a href="{{ url_for('admin_profile') }}" class="submit-btn" style="text-decoration: none; text-align: center; background-image: linear-gradient(to right, #10b981, #047857); flex-grow: 1;">{{ get_text('admin_profile') }}</a>
+        </div>
+    </div>
+
+    <div class="content-section">
+        <h2>{{ get_text('add_new_game') }}</h2>
+        <form action="{{ url_for('add_game') }}" method="POST" enctype="multipart/form-data">
+            
+            {# --- حقول الإدخال تبدأ هنا --- #}
+            <div class="form-group">
+                <label>{{ get_text('game_name') }}</label>
+                <input type="text" name="name" required>
+            </div>
+            <div class="form-group">
+                <label>{{ get_text('price') }} ($)</label>
+                <input type="number" step="0.01" name="price" required>
+            </div>
+            <div class="form-group">
+                <label>{{ get_text('description') }}</label>
+                <input type="text" name="description" required>
+            </div>
+            <div class="form-group">
+                <label>{{ get_text('category') }}</label>
+                <input type="text" name="category" required>
+            </div>
+             <div class="form-group">
+                <label>{{ get_text('game_type') }}</label>
+                <select name="game_type" style="width: 100%; padding: 12px 15px; border: 1px solid var(--border-color); border-radius: 8px; background-color: var(--bg-main); color: var(--text-primary);">
+                    <option value="game_code">{{ get_text('game_code') }}</option>
+                    <option value="account">{{ get_text('account') }}</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>{{ get_text('platform') }}</label>
+                <select name="platform" style="width: 100%; padding: 12px 15px; border: 1px solid var(--border-color); border-radius: 8px; background-color: var(--bg-main); color: var(--text-primary);">
+                    <option value="steam">{{ get_text('steam') }}</option>
+                    <option value="epic">{{ get_text('epic') }}</option>
+                    <option value="xbox">{{ get_text('xbox') }}</option>
+                    <option value="playstation">{{ get_text('playstation') }}</option>
+                    <option value="other" selected>{{ get_text('other') }}</option> {# Default to other #}
+                </select>
+            </div>
+            <div class="form-group">
+                <label>{{ get_text('game_image') }}</label>
+                <input type="file" name="image" required>
+            </div>
+            <div class="form-group">
+                <label>{{ get_text('game_username') }}</label>
+                <input type="text" name="game_username">
+            </div>
+            <div class="form-group">
+                <label>{{ get_text('game_password') }}</label>
+                <input type="text" name="game_password">
+            </div>
+            <div class="form-group" style="display: flex; align-items: center; gap: 10px;">
+                <input type="checkbox" id="is_free" name="is_free" style="width: auto;">
+                <label for="is_free" style="margin-bottom: 0;">{{ get_text('is_free_game') }}</label>
+            </div>
+             {# --- حقول الإدخال تنتهي هنا --- #}
+             
+            <button type="submit" class="submit-btn">{{ get_text('add_game_btn') }}</button>
+        </form>
+    </div>
+
+    <div class="content-section">
+        <h2>{{ get_text('registered_users') }}</h2>
+        <table style="width: 100%;">
+            <thead>
+                <tr>
+                    <th>{{ get_text('username') }}</th>
+                    <th>{{ get_text('registration_date') }}</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for user in users_list %}
+                <tr>
+                    <td>{{ user.username }}</td>
+                    <td>{{ user.created_at.strftime('%Y-%m-%d %H:%M') if user.created_at else 'N/A' }}</td>
+                </tr>
+                {% else %}
+                <tr><td colspan="2" style="text-align: center;">No registered users yet.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="content-section">
+        <h2>{{ get_text('admins_list') }}</h2>
+        <table style="width: 100%;">
+            <thead>
+                <tr>
+                    <th>{{ get_text('username') }}</th>
+                    <th>{{ get_text('role') }}</th>
+                    <th>{{ get_text('status') }}</th>
+                    <th>{{ get_text('last_seen') }}</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for admin in admins_list %}
+                <tr>
+                    <td>
+                        {{ admin.username }} {% if admin.id == session.admin_id %}({{ get_text('you') }}){% endif %}
+                    </td>
+                    <td>{{ admin.role }}</td>
+                    <td>
+                        <span style="color: {{ 'var(--success-color)' if admin.status_key == 'online' else 'var(--text-secondary)' }}; font-weight: bold;">
+                            {{ get_text(admin.status_key) }}
+                        </span>
+                    </td>
+                    <td>{{ admin.last_seen.strftime('%Y-%m-%d %H:%M:%S UTC') if admin.last_seen else 'Never' }}</td>
+                </tr>
+                {% else %}
+                <tr><td colspan="4" style="text-align: center;">No admins found (should not happen).</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="content-section">
+        <h2>{{ get_text('new_orders') }}</h2>
+        <table style="width: 100%;">
+            <thead><tr><th>{{ get_text('customer_name') }}</th><th>{{ get_text('phone') }}</th><th>{{ get_text('game') }}</th><th>{{ get_text('date') }}</th></tr></thead>
+            <tbody>
+                {% for order in orders %}
+                <tr>
+                    <td>{{ order.customer_name }}</td>
+                    <td>{{ order.customer_phone }}</td>
+                    <td>{{ order.game_name }}</td>
+                    <td>{{ order.created_at.strftime('%Y-%m-%d') if order.created_at else 'N/A' }}</td>
+                </tr>
+                {% else %}
+                <tr><td colspan="4" style="text-align: center;">{{ get_text('no_new_orders') }}</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="content-section">
+        <h2>{{ get_text('shop_games') }}</h2>
+        <table style="width: 100%;">
+            <thead><tr><th>{{ get_text('game') }}</th><th>{{ get_text('price') }}</th><th>{{ get_text('actions') }}</th></tr></thead>
+            <tbody>
+                {% for game in shop_games %}<tr><td>{{ game.name }}</td><td>${{ "%.2f"|format(game.price) }}</td><td><a href="{{ url_for('edit_game', game_id=game.id) }}" class="action-btn edit-btn">{{ get_text('edit') }}</a><form action="{{ url_for('delete_game', game_id=game.id) }}" method="POST" style="display:inline;"><button type="submit" class="action-btn delete-btn">{{ get_text('delete') }}</button></form></td></tr>
+                {% else %}<tr><td colspan="3" style="text-align: center;">{{ get_text('no_paid_games') }}</td></tr>{% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="content-section">
+        <h2>{{ get_text('free_games_title') }}</h2>
+        <table style="width: 100%;">
+            <thead><tr><th>{{ get_text('game') }}</th><th>{{ get_text('actions') }}</th></tr></thead>
+            <tbody>
+                {% for game in free_games %}<tr><td>{{ game.name }}</td><td><a href="{{ url_for('edit_game', game_id=game.id) }}" class="action-btn edit-btn">{{ get_text('edit') }}</a><form action="{{ url_for('delete_game', game_id=game.id) }}" method="POST" style="display:inline;"><button type="submit" class="action-btn delete-btn">{{ get_text('delete') }}</button></form></td></tr>
+                {% else %}<tr><td colspan="2" style="text-align: center;">{{ get_text('no_free_games') }}</td></tr>{% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

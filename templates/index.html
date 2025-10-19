@@ -1,0 +1,16 @@
+{% extends 'layout.html' %}
+{% block title %}DI NIRO - {{ get_text('home') }}{% endblock %}
+{% block content %}
+<div class="container">
+    <div class="home-container">
+        <div class="left">
+            <h1>{{ settings.title_part1 }} <span>{{ settings.title_part2 }}</span> {{ settings.title_part3 }}</h1>
+            <p>{{ settings.subtitle }}</p>
+        </div>
+        <div class="right">
+            <img src="{{ url_for('static', filename='home_image.png') }}?v={{ range(1, 1000) | random }}" alt="Featured Game">
+            <div class="discount-badge">-{{ settings.discount }}%</div>
+        </div>
+    </div>
+</div>
+{% endblock %}

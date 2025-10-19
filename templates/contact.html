@@ -1,0 +1,46 @@
+{% extends 'layout.html' %}
+{% block title %}{{ get_text('contact_us') }} - DI NIRO{% endblock %}
+
+{% block content %}
+<div class="main-content">
+    <div class="form-container contact" style="max-width: 550px;"> {# Adjusted max-width slightly #}
+        <h1>{{ get_text('get_in') }} <span>{{ get_text('touch') }}</span></h1>
+
+        {# Display flash messages at the top inside the container #}
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="flash {{ category }}" style="margin-bottom: 1.5rem;">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        {# --- Check login status --- #}
+        {% if current_user.is_authenticated %}
+            {# --- If user is logged in --- #}
+            <p style="text-align: center; color: var(--text-secondary); margin-bottom: 1.5rem;">
+                {{ get_text('welcome') }}, {{ current_user.username }}! {{ get_text('send_us_message') | default('Send us your message below.') }}
+            </p>
+            <form action="{{ url_for('contact') }}" method="POST">
+                {# Name and email will be taken from the backend #}
+                <div class="form-group">
+                    <label>{{ get_text('message') }}</label>
+                    <textarea name="message" required></textarea>
+                </div>
+                <button type="submit" class="submit-btn">{{ get_text('send_message') }}</button>
+            </form>
+        {% else %}
+            {# --- If user is a guest --- #}
+            <div style="text-align: center; color: var(--text-secondary); padding: 2rem; border: 1px dashed var(--border-color); border-radius: 8px;">
+                <p>{{ get_text('login_to_contact') | default('Please log in or register to send us a message.') }}</p>
+                <div style="display: flex; gap: 1rem; justify-content: center; margin-top: 1.5rem;">
+                     {# Using user_login_route and user_register_route endpoints #}
+                     <a href="{{ url_for('user_login_route') }}" class="submit-btn" style="text-decoration: none; width: auto; padding: 10px 20px;">{{ get_text('login') }}</a>
+                     <a href="{{ url_for('user_register_route') }}" class="submit-btn" style="text-decoration: none; width: auto; padding: 10px 20px; background-image: linear-gradient(to right, #10b981, #047857);">{{ get_text('register') }}</a>
+                </div>
+            </div>
+        {% endif %}
+        {# --- End check --- #}
+    </div>
+</div>
+{% endblock %}

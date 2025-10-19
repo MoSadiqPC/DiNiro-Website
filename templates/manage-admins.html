@@ -1,0 +1,79 @@
+{% extends 'layout.html' %}
+{% block title %}{{ get_text('manage_admins') }} - DI NIRO{% endblock %}
+
+{% block content %}
+<div class="container dashboard">
+    <div class="dashboard-header" style="margin-bottom: 2rem;">
+        <h1>{{ get_text('manage_admins') }}</h1>
+    </div>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}{% for category, message in messages %}<div class="flash {{ category }}">{{ message }}</div>{% endfor %}{% endif %}
+    {% endwith %}
+
+    {% if is_super_admin %} {# <-- الشرط هنا #}
+    <div class="content-section">
+        <h2>{{ get_text('add_new_admin') }}</h2>
+        <form action="{{ url_for('manage_admins') }}" method="POST">
+            <input type="hidden" name="action" value="add_admin">
+            <div class="form-group">
+                <label>{{ get_text('username') }}</label>
+                <input type="text" name="username" required>
+            </div>
+            <div class="form-group">
+                <label>{{ get_text('password') }}</label>
+                <input type="password" name="password" required>
+            </div>
+            {# Optionally add role selection for super admin #}
+            {# 
+            <div class="form-group">
+                <label>Role</label>
+                <select name="role">
+                    <option value="admin">Admin</option>
+                    <option value="super_admin">Super Admin</option>
+                </select>
+            </div> 
+            #}
+            <button type="submit" class="submit-btn">{{ get_text('add_admin_btn') }}</button>
+        </form>
+    </div>
+    {% endif %} {# <-- نهاية الشرط #}
+
+    {% if is_super_admin %} {# <-- الشرط هنا أيضاً #}
+    <div class="content-section">
+        <h2>{{ get_text('current_admins') }}</h2>
+        <table style="width:100%">
+            <thead>
+                <tr>
+                    <th>Username</th>
+                    <th>Role</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for admin in admins %}
+                <tr>
+                    <td>
+                        {{ admin.username }}
+                        {% if admin.id == session.admin_id %}({{ get_text('you') }}){% endif %}
+                    </td>
+                     <td>{{ admin.role }}</td>
+                    <td style="text-align: right;">
+                        {# المشرف الخارق لا يمكنه حذف نفسه أو مشرف خارق آخر #}
+                        {% if admin.id != session.admin_id and admin.role != 'super_admin' %}
+                        <form action="{{ url_for('manage_admins') }}" method="POST" style="display:inline;">
+                            <input type="hidden" name="action" value="delete_admin">
+                            <input type="hidden" name="admin_id" value="{{ admin.id }}">
+                            <button type="submit" class="action-btn delete-btn">{{ get_text('delete') }}</button>
+                        </form>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% endif %} {# <-- نهاية الشرط #}
+
+</div>
+{% endblock %}

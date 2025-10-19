@@ -1,0 +1,54 @@
+{% extends 'layout.html' %}
+{% block title %}{{ get_text('user_register_title') }} - DI NIRO{% endblock %}
+
+{% block content %}
+<div class="main-content">
+    <div class="form-container">
+        <h1 style="text-align: center;">{{ get_text('user_register_title') }}</h1>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                     {% if category == 'error' %}
+                        <div class="flash {{ category }}" style="margin-bottom: 1rem;">{{ message }}</div>
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <form action="{{ url_for('user_register_route') }}" method="POST">
+            <div class="form-group">
+                <label>{{ get_text('username') }}</label>
+                <input type="text" name="username" required>
+            </div>
+            <div class="form-group">
+                <label>{{ get_text('your_email') }} ({{ get_text('optional') | default('Optional') }})</label>
+                <input type="email" name="email">
+            </div>
+
+            <div class="form-group">
+                <label>{{ get_text('phone') }}</label>
+                <input type="tel" name="phone" required placeholder="+964xxxxxxxxx"> {# Added placeholder example #}
+                <small style="color: var(--text-secondary); display: block; margin-top: 5px;">
+                    {{ get_text('phone_whatsapp_note') | default('Please ensure this number is reachable via call or WhatsApp.') }}
+                </small>
+            </div>
+            <div class="form-group">
+                <label>{{ get_text('password') }}</label>
+                <input type="password" name="password" required>
+                 <small style="color: var(--text-secondary); display: block; margin-top: 5px;">
+                    {{ get_text('password_security_note') | default('Use a strong password different from your Google account.') }}
+                </small>
+            </div>
+             <div class="form-group">
+                <label>{{ get_text('confirm_password') }}</label>
+                <input type="password" name="confirm_password" required>
+            </div>
+            <button type="submit" class="submit-btn" style="background-image: linear-gradient(to right, #F59E0B, #D97706);">{{ get_text('register') }}</button>
+        </form>
+         <p style="text-align: center; margin-top: 1.5rem; color: var(--text-secondary);">
+            {{ get_text('account_exists') }} <a href="{{ url_for('user_login_route') }}" style="color: var(--accent-primary);">{{ get_text('login') }}</a>
+        </p>
+    </div>
+</div>
+{% endblock %}
