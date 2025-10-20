@@ -1,25 +1,28 @@
 <nav>
     <div class="logo">
-        <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo">
+        <img src="{{ url_for('static', filename='logo.png') }}" alt="DI NIRO Logo">
         <h2>DI NIRO</h2>
     </div>
-    <ul>
+
+    <ul class="nav-links">
         <li><a href="{{ url_for('index') }}" class="{{ 'active' if endpoint == 'index' else '' }}">{{ get_text('home') }}</a></li>
         <li><a href="{{ url_for('shop') }}" class="{{ 'active' if endpoint == 'shop' else '' }}">{{ get_text('shop') }}</a></li>
-        <li><a href="{{ url_for('free_games') }}" class="{{ 'active' if endpoint == 'free_games' else '' }}">{{ get_text('free_games') }}</a></li>
+        <li><a href="{{ url_for('free_games') }}" class=" {{ 'active' if endpoint == 'free_games' else '' }}">{{ get_text('free_games') }}</a></li>
         <li><a href="{{ url_for('contact') }}" class="{{ 'active' if endpoint == 'contact' else '' }}">{{ get_text('contact_us') }}</a></li>
     </ul>
+
     <div class="nav-right">
         <div class="settings-bar">
             <a href="{{ url_for('set_currency', currency='USD') }}" class="{{ 'active' if currency == 'USD' else '' }}">$</a>
             <a href="{{ url_for('set_currency', currency='IQD') }}" class="{{ 'active' if currency == 'IQD' else '' }}">د.ع</a>
         </div>
-        <a href="{{ url_for('set_language', lang='ar' if session.get('language', 'en') == 'en' else 'en') }}" class="lang-link">
-            {% if session.get('language', 'en') == 'en' %}ع{% else %}En{% endif %}
-        </a>
-        <div class="theme-switch" id="theme-toggle">☀️</div>
+        <div class="settings-bar">
+            <a href="{{ url_for('set_language', lang='en') }}" class="{{ 'active' if session.get('language', 'en') == 'en' else '' }}">EN</a>
+            <a href="{{ url_for('set_language', lang='ar') }}" class="{{ 'active' if session.get('language', 'en') == 'ar' else '' }}">AR</a>
+        </div>
+        <span class="theme-switch" id="theme-toggle">☀️</span>
         
-        {% if session.get('admin_id') %}
+        {% if 'admin_id' in session %}
             <a href="{{ url_for('view_messages') }}" class="notification-bell">
                 <span>🔔</span>
                 {% if unread_count > 0 %}
@@ -27,14 +30,13 @@
                 {% endif %}
             </a>
             <a href="{{ url_for('dashboard') }}" class="sign-in">{{ get_text('dashboard') }}</a>
-            
-            <a href="{{ url_for('logout') }}" class="sign-in" style="background-image: linear-gradient(to right, #f43f5e, #be123c);">{{ get_text('logout') }}</a>
-            
+            <a href="{{ url_for('admin_profile') }}" class="nav-link" style="color: var(--text-secondary); font-weight: 600;">{{ get_text('admin_profile') }}</a>
+            <a href="{{ url_for('logout') }}" class="sign-in" style="background-image: linear-gradient(to right, #ef4444, #dc2626);">{{ get_text('logout') }}</a>
         {% elif current_user.is_authenticated %}
-             <span style="color: var(--text-secondary);">{{ get_text('welcome') }}, {{ current_user.username }}</span>
-             <a href="{{ url_for('logout_user_route') }}" class="sign-in" style="background-image: linear-gradient(to right, #f43f5e, #be123c);">{{ get_text('logout_user') }}</a>
+            <span style="color: var(--text-secondary);">{{ get_text('welcome') }}, {{ current_user.username }}</span>
+            <a href="{{ url_for('logout_user_route') }}" class="sign-in" style="background-image: linear-gradient(to right, #ef4444, #dc2626);">{{ get_text('logout_user') }}</a>
         {% else %}
-            <a href="{{ url_for('login_selection') }}" class="sign-in">{{ get_text('login_options') }}</a> 
+            <a href="{{ url_for('login_selection') }}" class="sign-in">{{ get_text('login_options') }}</a>
         {% endif %}
     </div>
 </nav>

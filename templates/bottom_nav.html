@@ -1,0 +1,39 @@
+<nav class="bottom-nav">
+    <a href="{{ url_for('index') }}" class="bottom-nav-link {{ 'active' if endpoint == 'index' else '' }}">
+        <span>{{ get_text('home') }}</span>
+    </a>
+    <a href="{{ url_for('shop') }}" class="bottom-nav-link {{ 'active' if endpoint == 'shop' else '' }}">
+        <span>{{ get_text('shop') }}</span>
+    </a>
+    <a href="{{ url_for('free_games') }}" class="bottom-nav-link {{ 'active' if endpoint == 'free_games' else '' }}">
+        <span>{{ get_text('free_games') }}</span>
+    </a>
+
+    {% if session.get('admin_id') %}
+        <a href="{{ url_for('view_messages') }}" class="bottom-nav-link notification-bell-mobile {{ 'active' if 'view_messages' in endpoint else '' }}">
+            <span>🔔</span>
+            {% if unread_count > 0 %}
+            <span class="badge">{{ unread_count }}</span>
+            {% endif %}
+        </a>
+    {% else %}
+         <a href="{{ url_for('contact') }}" class="bottom-nav-link {{ 'active' if endpoint == 'contact' else '' }}">
+            <span>{{ get_text('contact_us') }}</span>
+        </a>
+    {% endif %}
+    
+    {# رابط الدخول/الداشبورد/الخروج في الشريط السفلي #}
+    {% if 'admin_id' in session %}
+        <a href="{{ url_for('dashboard') }}" class="bottom-nav-link {{ 'active' if 'dashboard' in endpoint or 'admin' in endpoint else '' }}">
+            <span>{{ get_text('dashboard') }}</span>
+        </a>
+    {% elif current_user.is_authenticated %}
+         <a href="{{ url_for('logout_user_route') }}" class="bottom-nav-link">
+            <span>{{ get_text('logout_user') }}</span>
+        </a>
+    {% else %}
+        <a href="{{ url_for('login_selection') }}" class="bottom-nav-link {{ 'active' if 'login' in endpoint or 'admin_login' in endpoint or 'user_login' in endpoint or 'user_register' in endpoint else '' }}">
+            <span>{{ get_text('login_options') }}</span>
+        </a>
+    {% endif %}
+</nav>

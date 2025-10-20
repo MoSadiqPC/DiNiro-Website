@@ -15,21 +15,18 @@ body.light-mode {
     --text-primary: #1E293B; --text-secondary: #64748B;
 }
 @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
-@keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } } /* Adjusted float height slightly */
+@keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
 
 body {
     margin: 0;
     font-family: 'Poppins', sans-serif;
-    /* --- الخلفية اللونية الأساسية --- */
     background-color: var(--bg-main);
-    background-image: none !important; /* التأكد من عدم وجود خلفية عامة */
-    /* --- نهاية الخلفية --- */
+    background-image: none !important;
     color: var(--text-primary);
     line-height: 1.6;
     transition: background-color 0.3s, color 0.3s;
+    padding-bottom: 70px; /* مساحة للشريط السفلي على الموبايل */
 }
-
-/* إعادة اللون الأساسي لكل الصفحات ما عدا صفحة اختيار الدخول */
 body:not(.login-selection-page) {
      background-color: var(--bg-main) !important;
      background-image: none !important;
@@ -38,10 +35,11 @@ body:not(.login-selection-page) {
 main { min-height: calc(100vh - 150px); }
 nav { background-color: rgba(30, 41, 59, 0.7); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); display: flex; justify-content: space-between; align-items: center; padding: 1rem 3rem; position: sticky; top: 0; z-index: 100; border-bottom: 1px solid var(--border-color); }
 body.light-mode nav { background-color: rgba(255, 255, 255, 0.7); }
-.logo { display: flex; align-items: center; gap: 1rem; } .logo img { width: 100px; height: 100px; border-radius: 50%; border: 2px solid var(--accent-primary); } .logo h2 { margin: 0; font-weight: 700; }
-nav ul { list-style: none; display: flex; gap: 2rem; margin: 0; padding: 0;} nav ul li a { text-decoration: none; color: var(--text-secondary); font-weight: 600; position: relative; padding-bottom: 8px; transition: color 0.3s; }
-nav ul li a::after { content: ''; position: absolute; bottom: 0; left: 0; width: 0; height: 2px; background-color: var(--accent-primary); transition: width 0.3s; }
-nav ul li a:hover, nav ul li a.active { color: var(--text-primary); } nav ul li a.active::after { width: 100%; }
+.logo { display: flex; align-items: center; gap: 1rem; } .logo img { width: 120px; height: 120px; border-radius: 50%; border: 2px solid var(--accent-primary); } .logo h2 { margin: 0; font-weight: 700; }
+.nav-links { list-style: none; display: flex; gap: 2rem; margin: 0; padding: 0;}
+.nav-links li a { text-decoration: none; color: var(--text-secondary); font-weight: 600; position: relative; padding-bottom: 8px; transition: color 0.3s; }
+.nav-links li a::after { content: ''; position: absolute; bottom: 0; left: 0; width: 0; height: 2px; background-color: var(--accent-primary); transition: width 0.3s; }
+.nav-links li a:hover, .nav-links li a.active { color: var(--text-primary); } .nav-links li a.active::after { width: 100%; }
 .nav-right { display: flex; align-items: center; gap: 1.5rem; }
 .sign-in { background-image: linear-gradient(to right, #a855f7, #6366f1); color: #fff; padding: 12px 30px; border-radius: 50px; text-decoration: none; font-weight: 700; transition: all 0.3s; box-shadow: 0 4px 15px rgba(0,0,0,0.2); border: none; cursor: pointer; font-family: inherit; font-size: inherit; }
 .sign-in:hover { transform: translateY(-3px); box-shadow: 0 7px 20px rgba(99, 102, 241, 0.4); }
@@ -51,53 +49,13 @@ nav ul li a:hover, nav ul li a.active { color: var(--text-primary); } nav ul li 
 .theme-switch { cursor: pointer; font-size: 1.5rem; }
 .container { padding: 4rem 5rem; animation: fadeIn 0.6s ease-out forwards; }
 .home-container { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 3rem; min-height: 70vh; }
-.left { flex-basis: 45%; /* Suggest width for left side */ }
+.left { flex-basis: 45%; }
 .left h1 { font-size: clamp(3rem, 6vw, 4.5rem); font-weight: 900; line-height: 1.1; margin-bottom: 1.5rem;} .left h1 span { color: var(--accent-primary); text-shadow: 0 0 30px var(--shadow-primary); }
 .left p { font-size: 1.2rem; color: var(--text-secondary); max-width: 600px; }
-
-/* === Corrected Right Side Styling === */
-/* === Corrected Right Side Styling === */
-.right {
-    position: relative; /* Needed for badge positioning */
-    flex-basis: 45%;    /* Suggest width for right side */
-    max-width: 450px;   /* Ensure it doesn't get too large */
-    margin: 0 auto;     /* Center the container if needed */
-    text-align: center; /* Center image within the container */
-}
-
-.right img {
-    max-width: 100%; /* Image fills its container */
-    height: auto;
-    border-radius: 30px;
-    animation: float 6s ease-in-out infinite;
-    display: inline-block;
-}
-
-.discount-badge {
-    position: absolute;
-    top: 20px;       /* Adjust vertical position */
-    right: -20px;      /* Adjust horizontal position */
-    background-color: var(--accent-secondary);
-    color: var(--bg-surface);
-    padding: 8px 18px;
-    font-size: 1.2rem;
-    font-weight: 700;
-    border-radius: 8px;
-    transform: rotate(15deg);
-    box-shadow: 0 5px 15px rgba(245, 158, 11, 0.4);
-    z-index: 5; /* Ensure it's above the image */
-    /* Remove animation if it causes issues */
-    /* animation: float 3s ease-in-out infinite alternate; */
-}
-
-/* RTL positioning for badge */
-.lang-ar .discount-badge {
-    right: auto;
-    left: -20px;       /* Adjust horizontal position for RTL */
-    transform: rotate(-15deg);
-}
-/* === End Corrected Right Side Styling === *//* === End Corrected Right Side Styling === */
-
+.right { position: relative; flex-basis: 45%; max-width: 450px; margin: 0 auto; text-align: center; }
+.right img { max-width: 100%; height: auto; border-radius: 30px; animation: float 6s ease-in-out infinite; display: inline-block; }
+.discount-badge { position: absolute; top: 20px; right: -20px; background-color: var(--accent-secondary); color: var(--bg-surface); padding: 8px 18px; font-size: 1.2rem; font-weight: 700; border-radius: 8px; transform: rotate(15deg); box-shadow: 0 5px 15px rgba(245, 158, 11, 0.4); z-index: 5; }
+.lang-ar .discount-badge { right: auto; left: -20px; transform: rotate(-15deg); }
 .page-header { text-align: center; padding-bottom: 4rem; } .page-header h1 { font-size: 3.5rem; font-weight: 900; } .page-header span { color: var(--accent-primary); }
 .games-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 2rem; }
 .game-card { background: var(--bg-surface); border-radius: 16px; overflow: hidden; display: flex; flex-direction: column; border: 1px solid var(--border-color); transition: all 0.3s ease; position: relative; box-shadow: 0 4px 6px rgba(0,0,0,0.1); animation: fadeIn 0.5s ease-out forwards; }
@@ -105,7 +63,10 @@ nav ul li a:hover, nav ul li a.active { color: var(--text-primary); } nav ul li 
 .game-card .card-image { width: 100%; height: 200px; overflow: hidden; } .game-card img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.4s ease; }
 .game-card:hover img { transform: scale(1.05); }
 .game-info { padding: 1.5rem; flex-grow: 1; display: flex; flex-direction: column; }
-.game-info h3 { font-weight: 700; margin: 0 0 10px; color: var(--text-primary); } .game-info p { color: var(--text-secondary); flex-grow: 1; font-size: 0.9rem; margin-bottom: 1rem; }
+.game-title-container { display: flex; align-items: center; gap: 10px; margin-bottom: 5px; }
+.game-title-container h3 { margin: 0; }
+.platform-icon { width: 24px; height: 24px; object-fit: contain; }
+.game-info p { color: var(--text-secondary); flex-grow: 1; font-size: 0.9rem; margin-bottom: 1rem; }
 .price { font-weight: 700; font-size: 1.2rem; color: var(--accent-secondary); margin-bottom: 0.5rem; }
 .buy-btn, .get-now-btn { display: block; margin-top: auto; padding: 1rem; border: none; text-align: center; text-decoration: none; font-weight: 700; border-radius: 8px; width: 100%; box-sizing: border-box; background-image: linear-gradient(to right, var(--accent-primary), #3b82f6); color: #fff; transition: all 0.3s; }
 .buy-btn:hover, .get-now-btn:hover { transform: translateY(-3px); box-shadow: 0 7px 20px var(--shadow-primary); }
@@ -114,9 +75,9 @@ nav ul li a:hover, nav ul li a.active { color: var(--text-primary); } nav ul li 
 .form-container h1 { text-align: center; margin-top: 0; } .form-container h1 span { color: var(--accent-primary); }
 .form-group { margin-bottom: 1.5rem; }
 .form-group label { display: block; margin-bottom: 8px; font-weight: 600; color: var(--text-secondary); text-align: left; }
-.form-group input, .form-group textarea { box-sizing: border-box; width: 100%; padding: 12px 15px; border: 1px solid var(--border-color); border-radius: 8px; font-size: 16px; background-color: var(--bg-main); color: var(--text-primary); transition: all 0.2s; }
+.form-group input, .form-group textarea, .form-group select { box-sizing: border-box; width: 100%; padding: 12px 15px; border: 1px solid var(--border-color); border-radius: 8px; font-size: 16px; background-color: var(--bg-main); color: var(--text-primary); transition: all 0.2s; font-family: inherit; }
 .form-group textarea { resize: vertical; min-height: 120px; }
-.form-group input:focus, .form-group textarea:focus { border-color: var(--accent-primary); box-shadow: 0 0 0 3px var(--shadow-primary); outline: none; }
+.form-group input:focus, .form-group textarea:focus, .form-group select:focus { border-color: var(--accent-primary); box-shadow: 0 0 0 3px var(--shadow-primary); outline: none; }
 .submit-btn { background-image: linear-gradient(to right, var(--accent-primary), #3b82f6); color: #fff; border: none; padding: 15px; border-radius: 8px; font-size: 18px; font-weight: bold; cursor: pointer; width: 100%; margin-top: 1rem; transition: all 0.3s; }
 .submit-btn:hover { transform: translateY(-3px); box-shadow: 0 7px 20px var(--shadow-primary); }
 .dashboard { display: block; max-width: 1000px; margin: 0 auto; }
@@ -138,10 +99,8 @@ footer { text-align: center; padding: 2rem; margin-top: 2rem; border-top: 1px so
 .lang-ar .logo { order: 2; } .lang-ar .nav-right { order: 1; flex-direction: row-reverse; }
 .lang-ar .form-group label { text-align: right; }
 .lang-link { padding: 6px 14px; text-decoration: none; color: var(--text-secondary); font-weight: bold; border-radius: 50px; }
-
 .notification-bell { position: relative; font-size: 1.8rem; color: var(--text-secondary); text-decoration: none; padding: 0 10px; }
 .notification-bell .badge { position: absolute; top: 0px; right: 0px; padding: 2px 6px; border-radius: 50%; background: var(--danger-color); color: white; font-size: 0.7rem; font-weight: bold; }
-/* Dropdown Menu Styles (Kept for potential future use or if you revert) */
 .dropdown { position: relative; display: inline-block; }
 .dropdown-toggle .arrow { font-size: 0.7em; margin-left: 5px; display: inline-block; transition: transform 0.3s ease; }
 .dropdown-menu { display: none; position: absolute; background-color: var(--bg-surface); min-width: 160px; box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2); z-index: 101; border-radius: 8px; border: 1px solid var(--border-color); right: 0; margin-top: 5px; }
@@ -150,21 +109,148 @@ footer { text-align: center; padding: 2rem; margin-top: 2rem; border-top: 1px so
 .dropdown-menu a:hover { background-color: var(--accent-primary); color: white; }
 .dropdown.show .dropdown-menu { display: block; animation: fadeIn 0.3s ease-out; }
 .dropdown.show .dropdown-toggle .arrow { transform: rotate(180deg); }
-/* RTL Styles for Dropdown */
 .lang-ar .dropdown-menu { right: auto; left: 0; text-align: right; }
 .lang-ar .dropdown-toggle .arrow { margin-left: 0; margin-right: 5px; }
+body.login-selection-page { background-image: url('background.jpg'); background-size: cover; background-repeat: no-repeat; background-position: center center; background-attachment: fixed; }
+body.login-selection-page .form-container { background-color: rgba(30, 41, 59, 0.85); backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px); }
+.hamburger-menu { display: none; }
 
-/* === خلفية خاصة لصفحة اختيار الدخول === */
-body.login-selection-page {
-    background-image: url('background.jpg'); /* <-- ضع اسم صورة الخلفية هنا */
-    background-size: cover;
-    background-repeat: no-repeat;
-    background-position: center center;
-    background-attachment: fixed; /* لجعلها ثابتة */
+/* === Bottom Nav (Hidden on Desktop) === */
+.bottom-nav {
+    display: none; /* مخفي افتراضياً على الحاسبة */
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 60px;
+    background-color: var(--bg-surface);
+    border-top: 1px solid var(--border-color);
+    box-shadow: 0 -2px 10px rgba(0,0,0,0.2);
+    z-index: 100;
 }
-/* (اختياري) لجعل صندوق الخيارات أوضح فوق الصورة */
-body.login-selection-page .form-container {
-    background-color: rgba(30, 41, 59, 0.85); /* لون السطح مع شفافية */
-    backdrop-filter: blur(5px);
-    -webkit-backdrop-filter: blur(5px);
+.bottom-nav-link {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    flex-grow: 1;
+    text-decoration: none;
+    color: var(--text-secondary);
+    font-size: 0.8rem;
+    transition: color 0.2s;
+}
+.bottom-nav-link.active {
+    color: var(--accent-primary);
+}
+.bottom-nav-link.notification-bell-mobile {
+    position: relative;
+    font-size: 1.2rem;
+}
+.bottom-nav-link .badge {
+    position: absolute;
+    top: 5px;
+    right: 20px;
+    padding: 2px 6px;
+    border-radius: 50%;
+    background: var(--danger-color);
+    color: white;
+    font-size: 0.7rem;
+    font-weight: bold;
+}
+
+
+/*
+========================================
+    قواعد التصميم المتجاوب (للموبايل)
+========================================
+*/
+@media (max-width: 768px) {
+
+    /* === إظهار الشريط السفلي === */
+    .bottom-nav {
+        display: flex;
+    }
+
+    /* === إخفاء الروابط العلوية === */
+    .nav-links {
+        display: none;
+    }
+    .hamburger-menu {
+        display: none;
+    }
+
+    /* === تعديل الشريط العلوي === */
+    nav {
+        padding: 0.5rem 1rem;
+    }
+    .logo img {
+        width: 45px;
+        height: 45px;
+    }
+    .logo h2 {
+        display: none; /* إخفاء اسم الموقع في الشريط العلوي */
+    }
+
+    /* إخفاء كل شيء في الـ nav-right على الموبايل (لأننا نقلناه للأسفل) */
+    .nav-right {
+        display: none;
+    }
+
+    /* --- تعديل الحاوية الرئيسية --- */
+    .container {
+        padding: 2rem 1.5rem;
+    }
+    .home-container {
+        flex-direction: column;
+        text-align: center;
+    }
+    .left, .right {
+        flex-basis: 100%;
+    }
+    .left h1 {
+        font-size: 2.5rem;
+    }
+    .right img {
+        max-width: 280px; /* <-- تصغير الصورة في الرئيسية للموبايل */
+        width: 100%;
+        animation: none;
+    }
+    .discount-badge {
+        font-size: 1rem;
+        padding: 6px 14px;
+        top: 10px;
+        right: 10px;
+    }
+    .lang-ar .discount-badge {
+        right: auto;
+        left: 10px;
+    }
+    .games-grid {
+        grid-template-columns: 1fr;
+    }
+    /* === تصغير صورة المنتج في المتجر للموبايل === */
+    .game-card .card-image {
+        height: 150px; /* تصغير ارتفاع الصورة في الكارد */
+    }
+    .game-info {
+        padding: 1rem; /* تقليل الحشوة داخل الكارد */
+    }
+
+    .form-container {
+        padding: 2rem 1.5rem;
+    }
+    .controls-section {
+        flex-direction: column;
+        gap: 1rem;
+    }
+    .controls-section form {
+        width: 100%;
+        flex-direction: column;
+    }
+    .controls-section form button {
+        width: 100%;
+    }
+    .controls-section form select {
+        width: 100%;
+    }
 }

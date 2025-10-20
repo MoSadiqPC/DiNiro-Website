@@ -1,68 +1,54 @@
+// === Theme Logic ===
+function toggleTheme() {
+    const body = document.body;
+    body.classList.toggle('light-mode');
+    
+    // Save user preference in localStorage
+    const currentTheme = body.classList.contains('light-mode') ? 'light' : 'dark';
+    localStorage.setItem('theme', currentTheme);
+    
+    // Update theme icon
+    const themeSwitch = document.getElementById('theme-toggle');
+    if (themeSwitch) {
+        themeSwitch.textContent = currentTheme === 'light' ? '🌙' : '☀️';
+    }
+}
+
 document.addEventListener('DOMContentLoaded', () => {
-    // Theme Toggle Logic
-    const themeToggle = document.getElementById('theme-toggle');
-    if (themeToggle) {
-        const body = document.body;
-        function setTheme(theme) {
-            body.classList.toggle('light-mode', theme === 'light');
-            themeToggle.textContent = theme === 'light' ? '🌙' : '☀️';
-            localStorage.setItem('theme', theme);
-        }
-        themeToggle.addEventListener('click', () => {
-            setTheme(body.classList.contains('light-mode') ? 'dark' : 'light');
-        });
-        setTheme(localStorage.getItem('theme') || 'dark');
-    }
-
-    // Countdown Logic for Reveal Page
-    const countdownTimer = document.getElementById('countdown-timer');
-    if (countdownTimer) {
-        const credentialsArea = document.getElementById('credentials-area');
-        const countdownSection = document.querySelector('.credentials-countdown');
-        let countdownValue = 10;
-
-        const countdownInterval = setInterval(() => {
-            countdownValue -= 1;
-            countdownTimer.textContent = countdownValue;
-
-            if (countdownValue <= 0) {
-                clearInterval(countdownInterval);
-                if (countdownSection) countdownSection.style.display = 'none';
-                if (credentialsArea) credentialsArea.style.display = 'block';
-            }
-        }, 1000);
-    }
-
-    // Dropdown Menu Logic
-    const dropdowns = document.querySelectorAll('.dropdown');
-
-    dropdowns.forEach(dropdown => {
-        const toggle = dropdown.querySelector('.dropdown-toggle');
-        const menu = dropdown.querySelector('.dropdown-menu');
-
-        if (toggle && menu) {
-            toggle.addEventListener('click', (event) => {
-                event.stopPropagation(); // Prevent closing immediately
-                // Close other open dropdowns
-                closeOtherDropdowns(dropdown);
-                // Toggle the current dropdown
-                dropdown.classList.toggle('show');
-            });
-        }
-    });
-
-    // Close dropdowns when clicking anywhere else
-    window.addEventListener('click', (event) => {
-        if (!event.target.closest('.dropdown-toggle')) {
-            closeOtherDropdowns(null);
-        }
-    });
-
-    function closeOtherDropdowns(currentDropdown) {
-        dropdowns.forEach(dropdown => {
-            if (dropdown !== currentDropdown) {
-                dropdown.classList.remove('show');
-            }
-        });
+    const savedTheme = localStorage.getItem('theme') || 'dark'; // Default to dark
+    const body = document.body;
+    body.classList.toggle('light-mode', savedTheme === 'light');
+    
+    const themeSwitch = document.getElementById('theme-toggle');
+    if (themeSwitch) {
+        themeSwitch.textContent = savedTheme === 'light' ? '🌙' : '☀️';
+        themeSwitch.addEventListener('click', toggleTheme); // Add listener here
     }
 });
+// === End Theme Logic ===
+
+
+// === Dropdown Menu Logic ===
+function toggleDropdown(button) {
+    const dropdown = button.closest('.dropdown');
+    // Close other dropdowns
+    document.querySelectorAll('.dropdown.show').forEach(d => {
+        if (d !== dropdown) d.classList.remove('show');
+    });
+    // Toggle current one
+    dropdown.classList.toggle('show');
+}
+
+window.onclick = function(event) {
+    // Make sure the click is not on the theme switcher
+    if (!event.target.matches('.dropdown-toggle') && !event.target.matches('.theme-switch')) {
+        const dropdowns = document.getElementsByClassName("dropdown");
+        for (let i = 0; i < dropdowns.length; i++) {
+            const openDropdown = dropdowns[i];
+            if (openDropdown.classList.contains('show')) {
+                openDropdown.classList.remove('show');
+            }
+        }
+    }
+}
+// === End Dropdown Logic ===

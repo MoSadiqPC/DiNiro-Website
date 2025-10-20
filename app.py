@@ -10,29 +10,29 @@ import json
 import datetime # لإضافة الوقت والتاريخ
 from datetime import timezone # Required for timezone-aware comparison
 
-# --- Absolute Path Settings ---
+# --- إعدادات المسارات المطلقة ---
 BASE_DIR = os.path.abspath(os.path.dirname(__file__))
 DATABASE_PATH = os.path.join(BASE_DIR, 'database.db')
 UPLOAD_FOLDER_PATH = os.path.join(BASE_DIR, 'static')
 SETTINGS_FILE_PATH = os.path.join(BASE_DIR, 'settings.json')
 
 app = Flask(__name__)
-# CORS(app, supports_credentials=True) # Not needed now
-app.secret_key = os.urandom(24) # Required for sessions & Flask-Login
+# CORS(app, supports_credentials=True) # غير ضروري الآن
+app.secret_key = os.urandom(24) # ضروري للجلسات و Flask-Login
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER_PATH
 app.config['PERMANENT_SESSION_LIFETIME'] = datetime.timedelta(days=7) # Keep session for 7 days
-IQD_RATE = 1460 # (You can adjust this later)
+IQD_RATE = 1460 # (يمكنك تعديل هذا لاحقاً)
 
-# --- Flask-Login Setup for Regular Users ---
+# --- إعدادات Flask-Login للمستخدمين العاديين ---
 login_manager = LoginManager()
 login_manager.init_app(app)
-login_manager.login_view = "login_selection" # Redirect page if user isn't logged in
+login_manager.login_view = "login_selection" # صفحة إعادة التوجيه إذا لم يكن المستخدم مسجلاً دخوله
 login_manager.login_message = "login_required_message" # Key for translation
 login_manager.login_message_category = "info"
 
-# --- User Model for Flask-Login ---
+# --- نموذج المستخدم (User Model) لـ Flask-Login ---
 class User(UserMixin):
-    def __init__(self, id, username, email=None): # Made email optional here too
+    def __init__(self, id, username, email=None): # جعل الإيميل اختيارياً هنا أيضاً
         self.id = id
         self.username = username
         self.email = email
@@ -43,17 +43,17 @@ def load_user(user_id):
     user_data = conn.execute('SELECT * FROM users WHERE id = ?', (user_id,)).fetchone()
     conn.close()
     if user_data:
-        # Use direct indexing for email
+        # استخدام الفهرسة المباشرة للإيميل
         return User(id=user_data['id'], username=user_data['username'], email=user_data['email'])
     return None
 
-# --- Translation System ---
+# --- نظام الترجمة ---
 TRANSLATIONS = {
-    'en': { 'home': 'Home', 'shop': 'Shop', 'free_games': 'Free Games', 'contact_us': 'Contact Us', 'sign_in': 'SIGN IN', 'dashboard': 'Dashboard', 'manage_admins': 'Manage Admins', 'logout': 'Logout', 'welcome': 'Welcome', 'add_new_game': 'Add New Game', 'shop_games': 'Shop Games', 'new_orders': 'New Purchase Orders', 'free_games_title': 'Free Games', 'customer_name': 'Customer Name', 'phone': 'Phone', 'game': 'Game', 'date': 'Date', 'actions': 'Actions', 'price': 'Price', 'edit': 'Edit', 'delete': 'Delete', 'order_form': 'Order Form', 'your_name': 'Your Full Name', 'your_phone': 'Your Phone Number', 'order_notice': 'We will contact you via phone to complete the purchase process.', 'place_order': 'Confirm Order', 'order_success_title': 'Order Received', 'order_success_msg': 'Thank you! Your order has been received successfully. We will contact you soon.', 'back_to_shop': 'Back to Shop', 'buy_now': 'Buy Now', 'get_now': 'Get Now', 'admin_login': 'Admin Login', 'no_new_orders': 'There are no new orders.', 'no_paid_games': 'No games have been added to the shop yet.', 'edit_index': 'Edit Home Page', 'view_messages': 'View Messages', 'no_free_games': 'No free games have been added yet.', 'admin_profile': 'Admin Profile', 'update_profile': 'Update Profile', 'change_password': 'Change Password', 'new_password': 'New Password', 'current_password': 'Current Password', 'admin_logs': 'Admin Activity Logs', 'username': 'Username', 'password': 'Password', 'is_free_game': 'Is Free Game?', 'game_name': 'Game Name', 'description': 'Description', 'category': 'Category', 'game_image': 'Game Image', 'game_username': 'Game Username (Optional)', 'game_password': 'Game Password (Optional)', 'add_game_btn': 'Add Game', 'back_to_dashboard': 'Back to Dashboard', 'update_game_btn': 'Update Game', 'send_message': 'Send Message', 'get_in': 'Get In', 'touch': 'Touch', 'your_email': 'Your Email', 'message': 'Message', 'all_rights_reserved': 'All Rights Reserved.', 'change_your_password': 'Change Your Password', 'update_password': 'Update Password', 'add_new_admin': 'Add New Admin', 'add_admin_btn': 'Add Admin', 'current_admins': 'Current Admins', 'you': 'You', 'login': 'Login', 'our': 'Our', 'games': 'Games', 'your_next': 'Your Next', 'adventure': 'Adventure', 'awaits': 'Awaits', 'premium_hub': 'The premium hub for exclusive game accounts.', 'login_options': 'Login', 'login_admin': 'Admin Login', 'logout_user': 'Logout', 'register': 'Register', 'user_login_title': 'User Login', 'user_register_title': 'Create New Account', 'username_or_email': 'Username or Email', 'confirm_password': 'Confirm Password', 'account_exists': 'Already have an account?', 'no_account': "Don't have an account?", 'passwords_no_match': 'Passwords do not match!', 'registration_success': 'Account created successfully! Please log in.', 'login_failed': 'Incorrect username or password.', 'login_required_message': 'Please log in to access this page.', 'back_to_options': 'Back to Login Options', 'registered_users': 'Registered Users', 'registration_date': 'Registration Date', 'admins_list': 'Admins List', 'role': 'Role', 'status': 'Status', 'online': 'Online', 'offline': 'Offline', 'last_seen': 'Last Seen', 'login_success': 'Logged in successfully!', 'send_us_message': 'Send us your message below.', 'login_to_contact': 'Please log in or register to send us a message.', 'optional': 'Optional', 'phone_whatsapp_note': 'Please ensure this number is reachable via call or WhatsApp.', 'password_security_note': 'Use a strong password different from your Google account.', 'phone_required': 'Phone number is required.', 'search': 'Search', 'sort_by': 'Sort By', 'name_asc': 'Name (A-Z)', 'name_desc': 'Name (Z-A)', 'price_asc': 'Price (Low to High)', 'price_desc': 'Price (High to Low)', 'default': 'Default', 'game_type': 'Product Type', 'platform': 'Platform', 'account': 'Account', 'game_code': 'Game/Code', 'steam': 'Steam', 'epic': 'Epic Games', 'xbox': 'Xbox', 'playstation': 'PlayStation', 'other': 'Other' },
-    'ar': { 'home': 'الرئيسية', 'shop': 'المتجر', 'free_games': 'ألعاب مجانية', 'contact_us': 'تواصل معنا', 'sign_in': 'تسجيل الدخول', 'dashboard': 'لوحة التحكم', 'manage_admins': 'إدارة المشرفين', 'logout': 'تسجيل الخروج', 'welcome': 'أهلاً بك', 'add_new_game': 'إضافة لعبة جديدة', 'shop_games': 'ألعاب المتجر', 'new_orders': 'طلبات الشراء الجديدة', 'free_games_title': 'الألعاب المجانية', 'customer_name': 'اسم الزبون', 'phone': 'رقم الهاتف', 'game': 'اللعبة', 'date': 'التاريخ', 'actions': 'الإجراءات', 'price': 'السعر', 'edit': 'تعديل', 'delete': 'حذف', 'order_form': 'نموذج الطلب', 'your_name': 'اسمك الكامل', 'your_phone': 'رقم هاتفك', 'order_notice': 'سنتواصل معك عبر الهاتف لإكمال عملية الشراء.', 'place_order': 'تأكيد الطلب', 'order_success_title': 'تم استلام الطلب', 'order_success_msg': 'شكراً لك! لقد تم استلام طلبك بنجاح. سنتواصل معك قريباً.', 'back_to_shop': 'العودة للمتجر', 'buy_now': 'شراء الآن', 'get_now': 'احصل عليها الآن', 'admin_login': 'دخول المشرفين', 'no_new_orders': 'لا توجد طلبات شراء جديدة.', 'no_paid_games': 'لم تتم إضافة أي ألعاب للمتجر بعد.', 'edit_index': 'تعديل الصفحة الرئيسية', 'view_messages': 'عرض الرسائل', 'no_free_games': 'لم تتم إضافة أي ألعاب مجانية بعد.', 'admin_profile': 'الملف الشخصي للمشرف', 'update_profile': 'تحديث الملف الشخصي', 'change_password': 'تغيير كلمة المرور', 'new_password': 'كلمة المرور الجديدة', 'current_password': 'كلمة المرور الحالية', 'admin_logs': 'سجل نشاط المشرفين', 'username': 'اسم المستخدم', 'password': 'كلمة المرور', 'is_free_game': 'هل اللعبة مجانية؟', 'game_name': 'اسم اللعبة', 'description': 'الوصف', 'category': 'الفئة', 'game_image': 'صورة اللعبة', 'game_username': 'اسم مستخدم اللعبة (اختياري)', 'game_password': 'كلمة مرور اللعبة (اختياري)', 'add_game_btn': 'إضافة لعبة', 'back_to_dashboard': 'العودة للوحة التحكم', 'update_game_btn': 'تحديث اللعبة', 'send_message': 'إرسال الرسالة', 'get_in': 'ابقى على', 'touch': 'تواصل', 'your_email': 'بريدك الإلكتروني', 'message': 'الرسالة', 'all_rights_reserved': 'كل الحقوق محفوظة.', 'change_your_password': 'تغيير كلمة المرور الخاصة بك', 'update_password': 'تحديث كلمة المرور', 'add_new_admin': 'إضافة مشرف جديد', 'add_admin_btn': 'إضافة مشرف', 'current_admins': 'المشرفون الحاليون', 'you': 'أنت', 'login': 'دخول', 'our': 'ألعابنا', 'games': 'الرئيسية', 'your_next': 'مغامرتك', 'adventure': 'القادمة', 'awaits': 'بانتظارك', 'premium_hub': 'المركز المميز لحسابات الألعاب الحصرية.', 'login_options': 'دخول', 'login_admin': 'دخول المشرف', 'logout_user': 'تسجيل الخروج', 'register': 'تسجيل', 'user_login_title': 'دخول المستخدم', 'user_register_title': 'إنشاء حساب جديد', 'username_or_email': 'اسم المستخدم أو البريد', 'confirm_password': 'تأكيد كلمة المرور', 'account_exists': 'لديك حساب بالفعل؟', 'no_account': 'ليس لديك حساب؟', 'passwords_no_match': 'كلمتا المرور غير متطابقتين!', 'registration_success': 'تم إنشاء الحساب بنجاح! يرجى تسجيل الدخول.', 'login_failed': 'اسم المستخدم أو كلمة المرور غير صحيحة.', 'login_required_message': 'يرجى تسجيل الدخول للوصول لهذه الصفحة.', 'back_to_options': 'العودة لخيارات الدخول', 'registered_users': 'المستخدمون المسجلون', 'registration_date': 'تاريخ التسجيل', 'admins_list': 'قائمة المشرفين', 'role': 'الدور', 'status': 'الحالة', 'online': 'متصل', 'offline': 'غير متصل', 'last_seen': 'آخر ظهور', 'login_success': 'تم تسجيل الدخول بنجاح!', 'send_us_message': 'أرسل لنا رسالتك أدناه.', 'login_to_contact': 'يرجى تسجيل الدخول أو إنشاء حساب لإرسال رسالة.', 'optional': 'اختياري', 'phone_whatsapp_note': 'يرجى التأكد من أن هذا الرقم متاح للمكالمات أو واتساب.', 'password_security_note': 'استخدم كلمة مرور قوية مختلفة عن حسابك في جوجل.', 'phone_required': 'رقم الهاتف مطلوب.', 'search': 'بحث', 'sort_by': 'ترتيب حسب', 'name_asc': 'الاسم (أ-ي)', 'name_desc': 'الاسم (ي-أ)', 'price_asc': 'السعر (منخفض للأعلى)', 'price_desc': 'السعر (مرتفع للأقل)', 'default': 'افتراضي', 'game_type': 'نوع المنتج', 'platform': 'المنصة', 'account': 'حساب', 'game_code': 'لعبة/كود', 'steam': 'ستيم', 'epic': 'إبيك غيمز', 'xbox': 'إكس بوكس', 'playstation': 'بلايستيشن', 'other': 'أخرى' }
+    'en': { 'home': 'Home', 'shop': 'Shop', 'free_games': 'Free Games', 'contact_us': 'Contact Us', 'sign_in': 'SIGN IN', 'dashboard': 'Dashboard', 'manage_admins': 'Manage Admins', 'logout': 'Logout', 'welcome': 'Welcome', 'add_new_game': 'Add New Game', 'shop_games': 'Shop Games', 'new_orders': 'New Purchase Orders', 'free_games_title': 'Free Games', 'customer_name': 'Customer Name', 'phone': 'Phone', 'game': 'Game', 'date': 'Date', 'actions': 'Actions', 'price': 'Price', 'edit': 'Edit', 'delete': 'Delete', 'order_form': 'Order Form', 'your_name': 'Your Full Name', 'your_phone': 'Your Phone Number', 'order_notice': 'We will contact you via phone to complete the purchase process.', 'place_order': 'Confirm Order', 'order_success_title': 'Order Received', 'order_success_msg': 'Thank you! Your order has been received successfully. We will contact you soon.', 'back_to_shop': 'Back to Shop', 'buy_now': 'Buy Now', 'get_now': 'Get Now', 'admin_login': 'Admin Login', 'no_new_orders': 'There are no new orders.', 'no_paid_games': 'No games have been added to the shop yet.', 'edit_index': 'Edit Home Page', 'view_messages': 'View Messages', 'no_free_games': 'No free games have been added yet.', 'admin_profile': 'Admin Profile', 'update_profile': 'Update Profile', 'change_password': 'Change Password', 'new_password': 'New Password', 'current_password': 'Current Password', 'admin_logs': 'Admin Activity Logs', 'username': 'Username', 'password': 'Password', 'is_free_game': 'Is Free Game?', 'game_name': 'Game Name', 'description': 'Description', 'category': 'Category', 'game_image': 'Game Image', 'game_username': 'Game Username (Optional)', 'game_password': 'Game Password (Optional)', 'add_game_btn': 'Add Game', 'back_to_dashboard': 'Back to Dashboard', 'update_game_btn': 'Update Game', 'send_message': 'Send Message', 'get_in': 'Get In', 'touch': 'Touch', 'your_email': 'Your Email', 'message': 'Message', 'all_rights_reserved': 'All Rights Reserved.', 'change_your_password': 'Change Your Password', 'update_password': 'Update Password', 'add_new_admin': 'Add New Admin', 'add_admin_btn': 'Add Admin', 'current_admins': 'Current Admins', 'you': 'You', 'login': 'Login', 'our': 'Our', 'games': 'Games', 'your_next': 'Your Next', 'adventure': 'Adventure', 'awaits': 'Awaits', 'premium_hub': 'The premium hub for exclusive game accounts.', 'login_options': 'Login', 'login_admin': 'Admin Login', 'logout_user': 'Logout', 'register': 'Register', 'user_login_title': 'User Login', 'user_register_title': 'Create New Account', 'username_or_email': 'Username or Email', 'confirm_password': 'Confirm Password', 'account_exists': 'Already have an account?', 'no_account': "Don't have an account?", 'passwords_no_match': 'Passwords do not match!', 'registration_success': 'Account created successfully! Please log in.', 'login_failed': 'Incorrect username or password.', 'login_required_message': 'Please log in to access this page.', 'back_to_options': 'Back to Login Options', 'registered_users': 'Registered Users', 'registration_date': 'Registration Date', 'admins_list': 'Admins List', 'role': 'Role', 'status': 'Status', 'online': 'Online', 'offline': 'Offline', 'last_seen': 'Last Seen', 'login_success': 'Logged in successfully!', 'send_us_message': 'Send us your message below.', 'login_to_contact': 'Please log in or register to send us a message.', 'optional': 'Optional', 'phone_whatsapp_note': 'Please ensure this number is reachable via call or WhatsApp.', 'password_security_note': 'Use a strong password different from your Google account.', 'phone_required': 'Phone number is required.', 'search': 'Search', 'sort_by': 'Sort By', 'name_asc': 'Name (A-Z)', 'name_desc': 'Name (Z-A)', 'price_asc': 'Price (Low to High)', 'price_desc': 'Price (High to Low)', 'default': 'Default', 'game_type': 'Product Type', 'platform': 'Platform', 'account': 'Account', 'game_code': 'Game/Code', 'steam': 'Steam', 'epic': 'Epic Games', 'xbox': 'Xbox', 'playstation': 'PlayStation', 'other': 'Other', 'more': 'More', 'settings': 'Settings', 'language': 'Language', 'currency': 'Currency', 'theme': 'Theme' },
+    'ar': { 'home': 'الرئيسية', 'shop': 'المتجر', 'free_games': 'ألعاب مجانية', 'contact_us': 'تواصل معنا', 'sign_in': 'تسجيل الدخول', 'dashboard': 'لوحة التحكم', 'manage_admins': 'إدارة المشرفين', 'logout': 'تسجيل الخروج', 'welcome': 'أهلاً بك', 'add_new_game': 'إضافة لعبة جديدة', 'shop_games': 'ألعاب المتجر', 'new_orders': 'طلبات الشراء الجديدة', 'free_games_title': 'الألعاب المجانية', 'customer_name': 'اسم الزبون', 'phone': 'رقم الهاتف', 'game': 'اللعبة', 'date': 'التاريخ', 'actions': 'الإجراءات', 'price': 'السعر', 'edit': 'تعديل', 'delete': 'حذف', 'order_form': 'نموذج الطلب', 'your_name': 'اسمك الكامل', 'your_phone': 'رقم هاتفك', 'order_notice': 'سنتواصل معك عبر الهاتف لإكمال عملية الشراء.', 'place_order': 'تأكيد الطلب', 'order_success_title': 'تم استلام الطلب', 'order_success_msg': 'شكراً لك! لقد تم استلام طلبك بنجاح. سنتواصل معك قريباً.', 'back_to_shop': 'العودة للمتجر', 'buy_now': 'شراء الآن', 'get_now': 'احصل عليها الآن', 'admin_login': 'دخول المشرفين', 'no_new_orders': 'لا توجد طلبات شراء جديدة.', 'no_paid_games': 'لم تتم إضافة أي ألعاب للمتجر بعد.', 'edit_index': 'تعديل الصفحة الرئيسية', 'view_messages': 'عرض الرسائل', 'no_free_games': 'لم تتم إضافة أي ألعاب مجانية بعد.', 'admin_profile': 'الملف الشخصي للمشرف', 'update_profile': 'تحديث الملف الشخصي', 'change_password': 'تغيير كلمة المرور', 'new_password': 'كلمة المرور الجديدة', 'current_password': 'كلمة المرور الحالية', 'admin_logs': 'سجل نشاط المشرفين', 'username': 'اسم المستخدم', 'password': 'كلمة المرور', 'is_free_game': 'هل اللعبة مجانية؟', 'game_name': 'اسم اللعبة', 'description': 'الوصف', 'category': 'الفئة', 'game_image': 'صورة اللعبة', 'game_username': 'اسم مستخدم اللعبة (اختياري)', 'game_password': 'كلمة مرور اللعبة (اختياري)', 'add_game_btn': 'إضافة لعبة', 'back_to_dashboard': 'العودة للوحة التحكم', 'update_game_btn': 'تحديث اللعبة', 'send_message': 'إرسال الرسالة', 'get_in': 'ابقى على', 'touch': 'تواصل', 'your_email': 'بريدك الإلكتروني', 'message': 'الرسالة', 'all_rights_reserved': 'كل الحقوق محفوظة.', 'change_your_password': 'تغيير كلمة المرور الخاصة بك', 'update_password': 'تحديث كلمة المرور', 'add_new_admin': 'إضافة مشرف جديد', 'add_admin_btn': 'إضافة مشرف', 'current_admins': 'المشرفون الحاليون', 'you': 'أنت', 'login': 'دخول', 'our': 'ألعابنا', 'games': 'الرئيسية', 'your_next': 'مغامرتك', 'adventure': 'القادمة', 'awaits': 'بانتظارك', 'premium_hub': 'المركز المميز لحسابات الألعاب الحصرية.', 'login_options': 'دخول', 'login_admin': 'دخول المشرف', 'logout_user': 'تسجيل الخروج', 'register': 'تسجيل', 'user_login_title': 'دخول المستخدم', 'user_register_title': 'إنشاء حساب جديد', 'username_or_email': 'اسم المستخدم أو البريد', 'confirm_password': 'تأكيد كلمة المرور', 'account_exists': 'لديك حساب بالفعل؟', 'no_account': 'ليس لديك حساب؟', 'passwords_no_match': 'كلمتا المرور غير متطابقتين!', 'registration_success': 'تم إنشاء الحساب بنجاح! يرجى تسجيل الدخول.', 'login_failed': 'اسم المستخدم أو كلمة المرور غير صحيحة.', 'login_required_message': 'يرجى تسجيل الدخول للوصول لهذه الصفحة.', 'back_to_options': 'العودة لخيارات الدخول', 'registered_users': 'المستخدمون المسجلون', 'registration_date': 'تاريخ التسجيل', 'admins_list': 'قائمة المشرفين', 'role': 'الدور', 'status': 'الحالة', 'online': 'متصل', 'offline': 'غير متصل', 'last_seen': 'آخر ظهور', 'login_success': 'تم تسجيل الدخول بنجاح!', 'send_us_message': 'أرسل لنا رسالتك أدناه.', 'login_to_contact': 'يرجى تسجيل الدخول أو إنشاء حساب لإرسال رسالة.', 'optional': 'اختياري', 'phone_whatsapp_note': 'يرجى التأكد من أن هذا الرقم متاح للمكالمات أو واتساب.', 'password_security_note': 'استخدم كلمة مرور قوية مختلفة عن حسابك في جوجل.', 'phone_required': 'رقم الهاتف مطلوب.', 'search': 'بحث', 'sort_by': 'ترتيب حسب', 'name_asc': 'الاسم (أ-ي)', 'name_desc': 'الاسم (ي-أ)', 'price_asc': 'السعر (منخفض للأعلى)', 'price_desc': 'السعر (مرتفع للأقل)', 'default': 'افتراضي', 'game_type': 'نوع المنتج', 'platform': 'المنصة', 'account': 'حساب', 'game_code': 'لعبة/كود', 'steam': 'ستيم', 'epic': 'إبيك غيمز', 'xbox': 'إكس بوكس', 'playstation': 'بلايستيشن', 'other': 'أخرى', 'more': 'المزيد', 'settings': 'الإعدادات', 'language': 'اللغة', 'currency': 'العملة', 'theme': 'المظهر' }
 }
 
-# --- Helper Functions ---
+# --- دوال مساعدة ---
 @app.context_processor
 def inject_global_vars():
     lang = session.get('language', 'en')
@@ -92,60 +92,36 @@ def get_index_settings():
     except (FileNotFoundError, json.JSONDecodeError):
         return {'title_part1': 'YOUR NEXT', 'title_part2': 'ADVENTURE', 'title_part3': 'AWAITS', 'subtitle': 'The premium hub...', 'discount': '70'}
 
-# --- Database Initialization ---
+# --- تهيئة قاعدة البيانات ---
 def init_db():
     with get_db_connection() as conn:
-        # --- Games Table ---
         conn.execute('''CREATE TABLE IF NOT EXISTS games (
-                            id INTEGER PRIMARY KEY,
-                            name TEXT NOT NULL,
-                            description TEXT,
-                            price REAL NOT NULL,
-                            category TEXT,
-                            image_filename TEXT,
-                            is_free BOOLEAN NOT NULL DEFAULT 0,
-                            game_username TEXT,
-                            game_password TEXT,
-                            game_type TEXT DEFAULT 'game_code', -- Added
-                            platform TEXT DEFAULT 'other'     -- Added
+                            id INTEGER PRIMARY KEY, name TEXT NOT NULL, description TEXT, 
+                            price REAL NOT NULL, category TEXT, image_filename TEXT, 
+                            is_free BOOLEAN NOT NULL DEFAULT 0, game_username TEXT, game_password TEXT,
+                            game_type TEXT DEFAULT 'game_code', platform TEXT DEFAULT 'other'
                         );''')
-        # Add columns if they don't exist (for existing databases)
         try: conn.execute('ALTER TABLE games ADD COLUMN game_type TEXT DEFAULT "game_code"')
         except: pass
         try: conn.execute('ALTER TABLE games ADD COLUMN platform TEXT DEFAULT "other"')
         except: pass
-
-        # --- Admins Table ---
         try: conn.execute('ALTER TABLE admins ADD COLUMN role TEXT NOT NULL DEFAULT "admin"')
         except: pass
         try: conn.execute('ALTER TABLE admins ADD COLUMN last_seen TIMESTAMP')
         except: pass
         conn.execute('CREATE TABLE IF NOT EXISTS admins (id INTEGER PRIMARY KEY, username TEXT UNIQUE NOT NULL, password TEXT NOT NULL, role TEXT NOT NULL DEFAULT "admin", last_seen TIMESTAMP);')
-
-        # --- Orders Table ---
         conn.execute('CREATE TABLE IF NOT EXISTS orders (id INTEGER PRIMARY KEY AUTOINCREMENT, customer_name TEXT NOT NULL, customer_phone TEXT NOT NULL, game_id INTEGER NOT NULL, game_name TEXT NOT NULL, created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP);')
-
-        # --- Messages Table ---
         conn.execute('CREATE TABLE IF NOT EXISTS messages (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT NOT NULL, email TEXT NOT NULL, message TEXT NOT NULL, is_read BOOLEAN NOT NULL DEFAULT 0, created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP);')
-
-        # --- Admin Logs Table ---
         conn.execute('CREATE TABLE IF NOT EXISTS admin_logs (id INTEGER PRIMARY KEY AUTOINCREMENT, admin_id INTEGER NOT NULL, admin_username TEXT NOT NULL, action TEXT NOT NULL, timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP, FOREIGN KEY (admin_id) REFERENCES admins (id));')
-
-        # --- Users Table ---
         conn.execute('''
             CREATE TABLE IF NOT EXISTS users (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                username TEXT UNIQUE NOT NULL,
-                password TEXT NOT NULL,
-                email TEXT UNIQUE,
-                phone TEXT, -- Added phone field
+                id INTEGER PRIMARY KEY AUTOINCREMENT, username TEXT UNIQUE NOT NULL,
+                password TEXT NOT NULL, email TEXT UNIQUE, phone TEXT,
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
             );
         ''')
         try: conn.execute('ALTER TABLE users ADD COLUMN phone TEXT')
         except: pass
-
-        # --- Create Super Admin if not exists ---
         cursor = conn.cursor()
         cursor.execute("SELECT * FROM admins WHERE username = ?", ('admin',))
         if not cursor.fetchone():
@@ -154,7 +130,7 @@ def init_db():
             conn.commit()
 init_db()
 
-# --- Admin Activity Logging ---
+# --- دالة لتسجيل النشاط ---
 def log_admin_activity(admin_id, admin_username, action):
     try:
         with get_db_connection() as conn:
@@ -164,7 +140,7 @@ def log_admin_activity(admin_id, admin_username, action):
     except Exception as e:
         print(f"Error logging activity: {e}")
 
-# --- Update Admin Last Seen Timestamp ---
+# --- دالة لتحديث آخر ظهور للمشرف ---
 @app.before_request
 def update_last_seen():
     if 'admin_id' in session:
@@ -198,7 +174,7 @@ def super_admin_required(f):
         return f(*args, **kwargs)
     return decorated_function
 
-# --- Public Routes ---
+# --- الصفحات العامة ---
 @app.route('/')
 def index():
     settings = get_index_settings()
@@ -244,7 +220,9 @@ def free_games():
 def contact():
     if request.method == 'POST':
         if not current_user.is_authenticated:
-            flash(get_text('login_required_message'), 'info')
+            lang = session.get('language', 'en')
+            login_message = TRANSLATIONS.get(lang, TRANSLATIONS['en']).get('login_required_message', 'Please log in to access this page.')
+            flash(login_message, 'info')
             return redirect(url_for('login_selection'))
         message_content = request.form['message']
         user_name = current_user.username
@@ -277,6 +255,7 @@ def order_form(game_id):
     return render_template('order-form.html', game=game)
 
 @app.route('/order-success')
+@login_required
 def order_success():
     return render_template('order-success.html')
 
@@ -290,14 +269,20 @@ def reveal_credentials(game_id):
         return redirect(url_for('free_games'))
     return render_template('reveal-credentials.html', game=game)
 
-# --- Login Selection Page ---
+# --- صفحة اختيار الدخول ---
 @app.route('/login-selection')
 def login_selection():
     if current_user.is_authenticated: return redirect(url_for('index'))
     if 'admin_id' in session: return redirect(url_for('dashboard'))
     return render_template('login_selection.html')
 
-# --- User Login and Registration Routes ---
+# *** المسار الجديد لصفحة "المزيد" / "الإعدادات" ***
+@app.route('/settings')
+def settings():
+    # This page will show theme, language, and currency options on mobile
+    return render_template('settings.html')
+
+# --- تسجيل دخول وتسجيل المستخدم ---
 @app.route('/user-login', methods=['GET', 'POST'])
 def user_login_route():
     if current_user.is_authenticated: return redirect(url_for('index'))
@@ -335,7 +320,7 @@ def user_register_route():
             return render_template('user_register.html')
         
         if not phone:
-             flash(get_text('phone_required'), 'error')
+             flash(TRANSLATIONS.get(lang, TRANSLATIONS['en']).get('phone_required', 'Phone number is required.'), 'error')
              return render_template('user_register.html')
 
         hashed_password = generate_password_hash(password, method='pbkdf2:sha256')
@@ -359,7 +344,7 @@ def user_register_route():
 
     return render_template('user_register.html')
 
-# --- User Logout Route ---
+# --- تسجيل خروج المستخدم العادي ---
 @app.route("/logout-user")
 @login_required
 def logout_user_route():
@@ -367,7 +352,7 @@ def logout_user_route():
     flash("تم تسجيل الخروج.", "info")
     return redirect(url_for("index"))
 
-# --- Admin Routes ---
+# --- صفحات المشرفين (Admin) ---
 @app.route('/admin', methods=['GET', 'POST'])
 def admin_login():
     if 'admin_id' in session: return redirect(url_for('dashboard'))
@@ -425,7 +410,12 @@ def dashboard():
         admin_dict['status_key'] = status_key
         admins_list.append(admin_dict)
     conn.close()
-    return render_template('dashboard.html', shop_games=shop_games, free_games=free_games, orders=orders, users_list=users_list, admins_list=admins_list)
+    return render_template('dashboard.html',
+                           shop_games=shop_games,
+                           free_games=free_games,
+                           orders=orders,
+                           users_list=users_list,
+                           admins_list=admins_list)
 
 @app.route('/add-game', methods=['POST'])
 @admin_required
@@ -447,8 +437,8 @@ def add_game():
                   1 if 'is_free' in request.form else 0,
                   request.form.get('game_username'),
                   request.form.get('game_password'),
-                  request.form.get('game_type', 'game_code'), # Get type
-                  request.form.get('platform', 'other')      # Get platform
+                  request.form.get('game_type', 'game_code'),
+                  request.form.get('platform', 'other')
                  ))
             conn.commit()
         log_admin_activity(session['admin_id'], session['username'], f"Added game: {request.form['name']}")
@@ -465,11 +455,11 @@ def edit_game(game_id):
         name = request.form['name']; price = request.form['price']; description = request.form['description']
         category = request.form['category']; is_free = 1 if 'is_free' in request.form else 0
         game_username = request.form['game_username']; game_password = request.form['game_password']
-        game_type = request.form.get('game_type', 'game_code') # Get type
-        platform = request.form.get('platform', 'other')     # Get platform
+        game_type = request.form.get('game_type', 'game_code')
+        platform = request.form.get('platform', 'other')
         price_val = 0.0 if is_free else float(price)
         original_game = conn.execute("SELECT image_filename FROM games WHERE id = ?", (game_id,)).fetchone()
-
+        
         filename = original_game['image_filename'] if original_game else None
         if 'image' in request.files and request.files['image'].filename != '':
             file = request.files['image']
@@ -480,9 +470,8 @@ def edit_game(game_id):
                  if os.path.exists(old_path):
                      try: os.remove(old_path)
                      except OSError as e: print(f"Error deleting old file {old_path}: {e}")
-            filename = new_filename # Update filename only if new one was uploaded
+            filename = new_filename
             conn.execute("UPDATE games SET image_filename = ? WHERE id = ?", (filename, game_id))
-
 
         conn.execute("""UPDATE games SET
                         name=?, price=?, description=?, category=?, is_free=?,
@@ -495,7 +484,7 @@ def edit_game(game_id):
         log_admin_activity(session['admin_id'], session['username'], f"Edited game: {name} (ID: {game_id})")
         flash(f"Game '{name}' updated successfully!", "success")
         return redirect(url_for('dashboard'))
-
+        
     game = conn.execute("SELECT * FROM games WHERE id = ?", (game_id,)).fetchone()
     conn.close()
     if game is None:
