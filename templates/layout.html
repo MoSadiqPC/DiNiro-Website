@@ -2,17 +2,23 @@
 <html lang="{{ session.get('language', 'en') }}" class="{% if session.get('language', 'en') == 'ar' %}lang-ar{% endif %}">
 <head>
     <meta charset="UTF-8">
+    
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>{% block title %}DI NIRO{% endblock %}</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    
     <link rel="icon" href="{{ url_for('static', filename='favicon.png') }}" type="image/png">
+
 </head>
 <body class="{{ 'light-mode' if session.get('theme') == 'light' else '' }}">
     
+    {# شريط التنقل العلوي (سيتم إخفاء أجزاء منه على الموبايل) #}
     {% include 'nav.html' %}
 
     <main>
+        {# عرض رسائل الفلاش #}
         {% with messages = get_flashed_messages(with_categories=true) %}
             {% if messages %}
                 <div class="container" style="padding-top: 1rem; padding-bottom: 0;">
@@ -23,13 +29,15 @@
             {% endif %}
         {% endwith %}
 
+        {# المحتوى الرئيسي للصفحة #}
         {% block content %}
         {% endblock %}
     </main>
     
+    {# الفوتر السفلي #}
     {% include 'footer.html' %}
 
-    {# === شريط التنقل السفلي للموبايل === #}
+    {# === إضافة شريط التنقل السفلي (سيظهر على الموبايل فقط) === #}
     {% include 'bottom_nav.html' %}
     
     <script src="{{ url_for('static', filename='main.js') }}"></script>

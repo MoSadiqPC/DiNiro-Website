@@ -29,14 +29,18 @@
                 <span class="badge">{{ unread_count }}</span>
                 {% endif %}
             </a>
+            <a href="{{ url_for('update_notes') }}" class="nav-link" style="color: var(--text-secondary); font-weight: 600; font-size: 1.5rem;" title="{{ get_text('update_notes_title') }}">
+                🆕
+            </a>
             <a href="{{ url_for('dashboard') }}" class="sign-in">{{ get_text('dashboard') }}</a>
-            <a href="{{ url_for('admin_profile') }}" class="nav-link" style="color: var(--text-secondary); font-weight: 600;">{{ get_text('admin_profile') }}</a>
-            <a href="{{ url_for('logout') }}" class="sign-in" style="background-image: linear-gradient(to right, #ef4444, #dc2626);">{{ get_text('logout') }}</a>
+            
+            <a href="{{ url_for('logout') }}" class="sign-in" style="background-image: linear-gradient(to right, #f43f5e, #be123c);">{{ get_text('logout') }}</a>
+            
         {% elif current_user.is_authenticated %}
-            <span style="color: var(--text-secondary);">{{ get_text('welcome') }}, {{ current_user.username }}</span>
-            <a href="{{ url_for('logout_user_route') }}" class="sign-in" style="background-image: linear-gradient(to right, #ef4444, #dc2626);">{{ get_text('logout_user') }}</a>
+             <span style="color: var(--text-secondary);">{{ get_text('welcome') }}, {{ current_user.username }}</span>
+             <a href="{{ url_for('logout_user_route') }}" class="sign-in" style="background-image: linear-gradient(to right, #f43f5e, #be123c);">{{ get_text('logout_user') }}</a>
         {% else %}
-            <a href="{{ url_for('login_selection') }}" class="sign-in">{{ get_text('login_options') }}</a>
+            <a href="{{ url_for('login_selection') }}" class="sign-in">{{ get_text('login_options') }}</a> 
         {% endif %}
     </div>
 </nav>

@@ -13,18 +13,18 @@
                     {{ get_text('login_admin') }}
                 </a>
 
-                <p style="text-align: center; color: var(--text-secondary); margin: 1rem 0;">أو</p>
+                <p style="text-align: center; color: var(--text-secondary); margin: 1rem 0;">{{ get_text('or_divider') }}</p>
 
                 <a href="{{ url_for('user_login_route') }}" class="submit-btn" style="text-decoration: none; text-align: center; background-image: linear-gradient(to right, #10b981, #047857);">
-                    دخول المستخدم
+                    {{ get_text('user_login') }}
                 </a>
 
                 <a href="{{ url_for('user_register_route') }}" class="submit-btn" style="text-decoration: none; text-align: center; background-image: linear-gradient(to right, #F59E0B, #D97706);">
-                    إنشاء حساب جديد
+                    {{ get_text('user_register') }}
                 </a>
 
                 <a href="{{ url_for('index') }}" class="submit-btn" style="text-decoration: none; text-align: center; background-color: var(--bg-surface); color: var(--text-secondary); border: 1px solid var(--border-color); background-image: none;">
-                    الدخول كضيف
+                    {{ get_text('guest_login') }}
                 </a>
             </div>
         </div>

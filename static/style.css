@@ -25,7 +25,7 @@ body {
     color: var(--text-primary);
     line-height: 1.6;
     transition: background-color 0.3s, color 0.3s;
-    padding-bottom: 70px; /* مساحة للشريط السفلي على الموبايل */
+    padding-bottom: 70px;
 }
 body:not(.login-selection-page) {
      background-color: var(--bg-main) !important;
@@ -35,7 +35,7 @@ body:not(.login-selection-page) {
 main { min-height: calc(100vh - 150px); }
 nav { background-color: rgba(30, 41, 59, 0.7); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); display: flex; justify-content: space-between; align-items: center; padding: 1rem 3rem; position: sticky; top: 0; z-index: 100; border-bottom: 1px solid var(--border-color); }
 body.light-mode nav { background-color: rgba(255, 255, 255, 0.7); }
-.logo { display: flex; align-items: center; gap: 1rem; } .logo img { width: 120px; height: 120px; border-radius: 50%; border: 2px solid var(--accent-primary); } .logo h2 { margin: 0; font-weight: 700; }
+.logo { display: flex; align-items: center; gap: 1rem; } .logo img { width: 100px; height: 100px; border-radius: 50%; border: 2px solid var(--accent-primary); } .logo h2 { margin: 0; font-weight: 700; }
 .nav-links { list-style: none; display: flex; gap: 2rem; margin: 0; padding: 0;}
 .nav-links li a { text-decoration: none; color: var(--text-secondary); font-weight: 600; position: relative; padding-bottom: 8px; transition: color 0.3s; }
 .nav-links li a::after { content: ''; position: absolute; bottom: 0; left: 0; width: 0; height: 2px; background-color: var(--accent-primary); transition: width 0.3s; }
@@ -158,99 +158,46 @@ body.login-selection-page .form-container { background-color: rgba(30, 41, 59, 0
     font-weight: bold;
 }
 
+/* === Update Modal Styles === */
+.modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.7); z-index: 1000; }
+.update-modal { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 90%; max-width: 500px; background-color: var(--bg-surface); padding: 2.5rem; border-radius: 16px; border: 1px solid var(--border-color); z-index: 1001; box-shadow: 0 10px 30px rgba(0,0,0,0.3); animation: fadeIn 0.3s ease-out; }
+.update-modal h2 { margin-top: 0; color: var(--accent-primary); }
+.update-modal h4 { color: var(--text-secondary); font-weight: 500; border-bottom: 1px solid var(--border-color); padding-bottom: 5px; }
+.update-list { list-style-type: disc; padding-left: 20px; color: var(--text-primary); line-height: 1.8; }
+.modal-close-btn { position: absolute; top: 15px; right: 20px; font-size: 2.5rem; color: var(--text-secondary); background: none; border: none; cursor: pointer; padding: 0; line-height: 1; }
+.modal-close-btn:hover { color: var(--text-primary); }
+.modal-overlay.show, .update-modal.show { display: block; }
+
+/* === تم حذف تنسيقات زر الصورة (.update-notes-btn) === */
+
 
 /*
 ========================================
-    قواعد التصميم المتجاوب (للموبايل)
+    Responsive (Mobile) Styles
 ========================================
 */
 @media (max-width: 768px) {
-
-    /* === إظهار الشريط السفلي === */
-    .bottom-nav {
-        display: flex;
-    }
-
-    /* === إخفاء الروابط العلوية === */
-    .nav-links {
-        display: none;
-    }
-    .hamburger-menu {
-        display: none;
-    }
-
-    /* === تعديل الشريط العلوي === */
-    nav {
-        padding: 0.5rem 1rem;
-    }
-    .logo img {
-        width: 45px;
-        height: 45px;
-    }
-    .logo h2 {
-        display: none; /* إخفاء اسم الموقع في الشريط العلوي */
-    }
-
-    /* إخفاء كل شيء في الـ nav-right على الموبايل (لأننا نقلناه للأسفل) */
-    .nav-right {
-        display: none;
-    }
-
-    /* --- تعديل الحاوية الرئيسية --- */
-    .container {
-        padding: 2rem 1.5rem;
-    }
-    .home-container {
-        flex-direction: column;
-        text-align: center;
-    }
-    .left, .right {
-        flex-basis: 100%;
-    }
-    .left h1 {
-        font-size: 2.5rem;
-    }
-    .right img {
-        max-width: 280px; /* <-- تصغير الصورة في الرئيسية للموبايل */
-        width: 100%;
-        animation: none;
-    }
-    .discount-badge {
-        font-size: 1rem;
-        padding: 6px 14px;
-        top: 10px;
-        right: 10px;
-    }
-    .lang-ar .discount-badge {
-        right: auto;
-        left: 10px;
-    }
-    .games-grid {
-        grid-template-columns: 1fr;
-    }
-    /* === تصغير صورة المنتج في المتجر للموبايل === */
-    .game-card .card-image {
-        height: 150px; /* تصغير ارتفاع الصورة في الكارد */
-    }
-    .game-info {
-        padding: 1rem; /* تقليل الحشوة داخل الكارد */
-    }
-
-    .form-container {
-        padding: 2rem 1.5rem;
-    }
-    .controls-section {
-        flex-direction: column;
-        gap: 1rem;
-    }
-    .controls-section form {
-        width: 100%;
-        flex-direction: column;
-    }
-    .controls-section form button {
-        width: 100%;
-    }
-    .controls-section form select {
-        width: 100%;
-    }
+    body { padding-bottom: 70px; }
+    .bottom-nav { display: flex; }
+    .nav-links { display: none; }
+    .hamburger-menu { display: none; }
+    nav { padding: 0.5rem 1rem; }
+    .logo img { width: 60px; height: 60px; }
+    .logo h2 { display: none; }
+    .nav-right { display: none; } /* Hide top-right nav on mobile */
+    .container { padding: 2rem 1.5rem; }
+    .home-container { flex-direction: column; text-align: center; }
+    .left, .right { flex-basis: 100%; }
+    .left h1 { font-size: 2.5rem; }
+    .right img { max-width: 280px; width: 100%; animation: none; }
+    .discount-badge { font-size: 1rem; padding: 6px 14px; top: 10px; right: 10px; }
+    .lang-ar .discount-badge { right: auto; left: 10px; }
+    .games-grid { grid-template-columns: 1fr; }
+    .game-card .card-image { height: 150px; }
+    .game-info { padding: 1rem; }
+    .form-container { padding: 2rem 1.5rem; }
+    .controls-section { flex-direction: column; gap: 1rem; }
+    .controls-section form { width: 100%; flex-direction: column; }
+    .controls-section form button { width: 100%; }
+    .controls-section form select { width: 100%; }
 }
